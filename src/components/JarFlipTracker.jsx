@@ -305,6 +305,8 @@ export default function JarFlipTracker({ onBack }) {
       
       {!isMobile ? (
         <Sidebar 
+          appTitle="FlipTracker Pro"
+          appContext={'jarflip'} 
           view={view === 'history' ? 'projects' : view}
           setView={handleViewChange}
           sidebarCollapsed={sidebarCollapsed} 

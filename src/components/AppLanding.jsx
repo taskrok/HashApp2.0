@@ -19,10 +19,12 @@ import {
     Shield,
     ArrowRight
 } from 'lucide-react';
-import WinnersCircle from './WinnersCircle/Index';
-import DuplicateAnalyticsPage from './DuplicateAnalyticsPage';
-import YieldTracker from './AdvancedYieldTracker.jsx';
-import JarFlipTracker from './JarFlipTracker.jsx';
+
+import WinnersCircle from './WinnersCircle/Index.jsx';
+import DuplicateAnalyticsPage from './DuplicateAnalyticsPage.jsx';
+import YieldTracker from "./AdvancedYieldTracker.jsx";
+import JarFlipTracker from './JarFlipTracker.jsx';    // This should work now
+import ConsumptionTracker from './ConsumptionTracker.jsx'; // This should work now
 
 // Main App Component that handles navigation
 const HashApp = () => {
@@ -39,7 +41,7 @@ const HashApp = () => {
             case 'jarFlipTracker':
                 return <JarFlipTracker title="FlipTracker Pro" onBack={() => navigateTo('landing')} />;
             case 'consumptionTracker':
-                return <ToolComponent title="Consumption Tracker" onBack={() => navigateTo('landing')} />;
+                return <ConsumptionTracker title="Consumption Tracker" onBack={() => navigateTo('landing')} />;
             case 'rosinPressCalculator':
                 return <ToolComponent title="Rosin Press Calculator" onBack={() => navigateTo('landing')} />;
             case 'splitCalculator':
@@ -55,7 +57,7 @@ const HashApp = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900  text-white font-sans overflow-x-hidden relative">
+        <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900  text-white font-sans relative">
             {/* Background Orbs */}
             <BackgroundOrbs />
             
@@ -130,7 +132,7 @@ const LandingPage = ({ onNavigate }) => {
             tags: ['Automation', 'Monitoring', 'Curing'],
             colors: 'from-orange-400 to-red-400',
             bgColors: 'from-orange-500/10 to-red-500/10',
-            available: false
+            available: true
         },
         { 
             id: 'consumptionTracker', 
@@ -186,7 +188,7 @@ const LandingPage = ({ onNavigate }) => {
 
     return (
         <div className="max-w-7xl mx-auto px-6 py-12 md:py-20">
-            <style jsx>{`
+            <style>{`
                 @keyframes float {
                     0%, 100% { transform: translateY(0px) rotate(0deg); }
                     50% { transform: translateY(-20px) rotate(5deg); }

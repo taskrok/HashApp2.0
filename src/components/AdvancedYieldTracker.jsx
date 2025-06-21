@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo, useCallback } from 'react';
 
 // --- Icon Imports ---
 import { TrendingUp, Brain } from 'lucide-react';
+import { sidebarMenuItems as baseMenuItems } from '../data/sidebarMenuItems.js';
 
 // --- Custom Hook Imports ---
 import { useWindowSize } from '../hooks/useWindowSize.js';
@@ -65,6 +66,17 @@ export default function AdvancedYieldTracker({ onBack }) {
   
   const [aiInsights, setAiInsights] = useState([]);
   
+    // --- SIDEBAR MENU ITEMS ---
+  const sidebarMenuItems = baseMenuItems.map(item => {
+    if (item.id === 'history') {
+      return { ...item, id: 'projects' };
+    }
+    if (item.id === 'form') {
+      return { ...item, id: 'tracker' };
+    }
+    return item;
+  });
+
   const processedWinners = useMemo(() => {
     return processCompetitionData({ placements, eventAwards, events, competitions });
   }, []);
@@ -330,17 +342,17 @@ export default function AdvancedYieldTracker({ onBack }) {
     />
     
     {!isMobile ? (
-      <Sidebar 
-        view={view} 
-        setView={setView} 
-        sidebarCollapsed={sidebarCollapsed} 
-        setSidebarCollapsed={setSidebarCollapsed} 
-        projects={projects} 
-        achievements={achievementData} 
-        aiInsights={aiInsights} 
-        themes={themes} 
-        currentTheme={currentTheme} 
-        setCurrentTheme={setCurrentTheme} 
+      <Sidebar
+        view={view}
+        setView={setView}
+        sidebarCollapsed={sidebarCollapsed}
+        setSidebarCollapsed={setSidebarCollapsed}
+        projects={projects}
+        achievements={achievementData}
+        aiInsights={aiInsights}
+        themes={themes}
+        currentTheme={currentTheme}
+        setCurrentTheme={setCurrentTheme}
         isOnline={isOnline} 
         realtimeUpdates={realtimeUpdates}
         isDarkMode={isDarkMode}
@@ -351,6 +363,7 @@ export default function AdvancedYieldTracker({ onBack }) {
         setView={setView} 
         onNavigate={() => setIsMobileMenuOpen(false)}
         isDarkMode={isDarkMode}
+        menuItems={sidebarMenuItems}
       />
     )}
     

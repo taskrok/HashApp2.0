@@ -744,7 +744,7 @@ const EnhancedLeaderboardModal = ({ placementData, eventAwardData }) => {
             />
 
             {/* Custom Scrollbar Styles */}
-            <style jsx>{`
+            <style>{`
                 .custom-scrollbar::-webkit-scrollbar {
                     width: 8px;
                 }

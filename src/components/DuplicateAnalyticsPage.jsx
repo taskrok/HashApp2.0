@@ -122,7 +122,7 @@ const DuplicateCard = ({ title, items, idKey }) => {
                                 <p className="font-mono text-red-300 break-all">ID: {item[idKey]}</p>
                                 <button 
                                     onClick={() => handleCopyClick(item[idKey])}
-                                    className="p-1.5 rounded-md hover:bg-slate-700 transition-colors text-gray-300 hover: style={{ color: textColor }} flex-shrink-0 ml-2"
+                                    className="p-1.5 rounded-md hover:bg-slate-700 transition-colors text-gray-300 flex-shrink-0 ml-2"
                                     aria-label="Copy ID"
                                 >
                                     {copiedId === item[idKey] ? (
@@ -209,7 +209,7 @@ const SimilarCategoriesCard = ({ title, groups, threshold, onThresholdChange }) 
                                             </span>
                                             <button 
                                                 onClick={() => handleCopyClick(category)}
-                                                className="p-1 rounded hover:bg-slate-600 transition-colors text-gray-300 hover: style={{ color: textColor }}"
+                                                className="p-1 rounded hover:bg-slate-600 transition-colors text-gray-300"
                                                 aria-label="Copy category"
                                             >
                                                 {copiedCategory === category ? (
@@ -236,43 +236,6 @@ const SimilarCategoriesCard = ({ title, groups, threshold, onThresholdChange }) 
 function DuplicateAnalyticsPage({ onBack }) {
     const [categoryThreshold, setCategoryThreshold] = useState(80);
 
-    // Debug: Log the actual data structure
-    React.useEffect(() => {
-        console.log('=== DEBUGGING CATEGORY DATA ===');
-        console.log('Sample competition:', competitions[0]);
-        console.log('Sample event:', events[0]);
-        console.log('Sample placement:', placements[0]);
-        console.log('Sample award:', eventAwards[0]);
-        
-        console.log('Competition fields:', competitions[0] ? Object.keys(competitions[0]) : 'No competitions');
-        console.log('Event fields:', events[0] ? Object.keys(events[0]) : 'No events');
-        console.log('Placement fields:', placements[0] ? Object.keys(placements[0]) : 'No placements');
-        console.log('Award fields:', eventAwards[0] ? Object.keys(eventAwards[0]) : 'No awards');
-        
-        // Check for categories in placements and awards instead
-        const possibleCategoryFields = ['category', 'categoryId', 'categoryName', 'type', 'class', 'division', 'strain', 'product'];
-        
-        console.log('=== SEARCHING FOR CATEGORIES IN ALL TABLES ===');
-        
-        const allTables = [
-            { name: 'competitions', data: competitions },
-            { name: 'events', data: events },
-            { name: 'placements', data: placements },
-            { name: 'eventAwards', data: eventAwards }
-        ];
-        
-        allTables.forEach(table => {
-            console.log(`\n--- ${table.name.toUpperCase()} ---`);
-            possibleCategoryFields.forEach(field => {
-                const categories = table.data.map(item => item[field]).filter(Boolean);
-                if (categories.length > 0) {
-                    const uniqueCategories = [...new Set(categories)];
-                    console.log(`Found ${categories.length} total, ${uniqueCategories.length} unique categories in "${field}":`, uniqueCategories.slice(0, 10));
-                }
-            });
-        });
-    }, []);
-
     // Memoize the duplicate search so it only runs when data changes
     const duplicateData = useMemo(() => ({
         duplicateCompetitions: findDuplicatesByKey(competitions, 'competitionId'),
@@ -281,24 +244,24 @@ function DuplicateAnalyticsPage({ onBack }) {
         duplicateAwards: findDuplicatesByKey(eventAwards, 'awardId'),
     }), []);
 
-    // Memoize the category analysis - try different field names
+    // Memoize the category analysis
     const categoryData = useMemo(() => {
-        // Try common category field names
-        const categoryFields = ['category', 'categoryId', 'categoryName', 'type', 'subject', 'discipline'];
+        const categoryFields = ['category', 'type', 'class', 'division'];
         
         let similarCompetitionCategories = [];
         let similarEventCategories = [];
         
-        // Find the field that has the most category data
         for (const field of categoryFields) {
-            const compCategories = findSimilarCategories(competitions, field, categoryThreshold);
-            const eventCategories = findSimilarCategories(events, field, categoryThreshold);
-            
-            if (compCategories.length > similarCompetitionCategories.length) {
-                similarCompetitionCategories = compCategories;
+            if (competitions.some(c => c[field])) {
+                similarCompetitionCategories = findSimilarCategories(competitions, field, categoryThreshold);
+                if (similarCompetitionCategories.length > 0) break;
             }
-            if (eventCategories.length > similarEventCategories.length) {
-                similarEventCategories = eventCategories;
+        }
+        
+        for (const field of categoryFields) {
+            if (events.some(e => e[field])) {
+                similarEventCategories = findSimilarCategories(events, field, categoryThreshold);
+                if (similarEventCategories.length > 0) break;
             }
         }
         
@@ -319,7 +282,7 @@ function DuplicateAnalyticsPage({ onBack }) {
                     <ChevronLeft className="w-6 h-6" />
                 </button>
                 <div>
-                    <h1 className="text-4xl font-bold  style={{ color: textColor }}">
+                    <h1 className="text-4xl font-bold text-white">
                         Database Integrity Check
                     </h1>
                     <p className="text-gray-400 mt-1">Scanning for duplicate IDs and similar categories in your database.</p>
@@ -328,7 +291,7 @@ function DuplicateAnalyticsPage({ onBack }) {
 
             {/* Duplicate ID Checks */}
             <section className="mb-12">
-                <h2 className="text-2xl font-bold  style={{ color: textColor }} mb-6 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                     <Database className="w-6 h-6" />
                     Duplicate ID Analysis
                 </h2>
@@ -358,7 +321,7 @@ function DuplicateAnalyticsPage({ onBack }) {
 
             {/* Category Cleanup */}
             <section>
-                <h2 className="text-2xl font-bold  style={{ color: textColor }} mb-6 flex items-center gap-2">
+                <h2 className="text-2xl font-bold text-white mb-6 flex items-center gap-2">
                     <Tags className="w-6 h-6" />
                     Category Cleanup Analysis
                 </h2>
